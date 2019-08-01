@@ -27,7 +27,7 @@ DIRNAME=$(cd "$(dirname "$0")" && pwd)
 # Fix file permissions
 # TODO: change this - it should be Travis independent
 if [[ "${TRAVIS:=}" == true ]]; then
-  sudo chown -R ${USER} .
+  sudo chown -R circleci.circleci .
 fi
 
 "${DIRNAME}/minikube/start_minikube.sh"
