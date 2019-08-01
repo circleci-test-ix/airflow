@@ -3,8 +3,8 @@ version: 2.1
 executors:
   default-executor:    
     machine:
-      image: ubuntu-1604:201903-01
-#       image: circleci/classic:201808-01
+#       image: ubuntu-1604:201903-01
+      image: circleci/classic:201808-01
     working_directory: ~/apache/airflow
       
 commands:
@@ -45,7 +45,7 @@ test_requires: &test_requires
     - mypy
     - check_license_header
     - lint_dockerfile
-    - pylint
+#     - pylint
 
 jobs:  
   tests_postgres_python_3_6:
