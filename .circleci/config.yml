@@ -4,13 +4,11 @@ executors:
   default-executor:    
     machine:
       image: ubuntu-1604:201903-01
+    working_directory: ~/apache/airflow
       
 commands:
   default-build-steps:
     parameters:
-      python-version:
-        type: string
-        default: "3.6.5"
       install-script:
         type: steps
         default:
@@ -24,7 +22,7 @@ commands:
       - run:
           name: Set Environment Variables
           command: |
-            pyenv global << parameters.python-version >>
+            pyenv global ${CIRCLECI_PYTHON_VERSION:-3.6.5}
             echo 'export BUILD_ID='"$CIRCLE_WORKFLOW_ID" >> $BASH_ENV
             echo 'CI="true"' >> $BASH_ENV
             echo 'TRAVIS="$CIRCLECI"' >> $BASH_ENV
@@ -58,9 +56,9 @@ jobs:
       BACKEND: sqlite
       ENV: docker
       TRAVIS_JOB_NAME: "Tests sqlite python 3.5"      
+      CIRCLECI_PYTHON_VERSION: 3.5.2
     steps:
-      - default-build-steps:
-          python-version: "3.5.2"
+      - default-build-steps
       
   tests_mysql_python_3_6:
     executor: default-executor
