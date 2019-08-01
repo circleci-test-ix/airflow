@@ -107,7 +107,7 @@ ${_MINIKUBE} start --kubernetes-version=${_KUBERNETES_VERSION} --vm-driver=${_VM
 ${_MINIKUBE} update-context
 # TODO: Check This - it should be travis-independent
 if [[ "${TRAVIS}" == true ]]; then
-  sudo chown -R ${USER} "${HOME}/.kube" "${HOME}/.minikube"
+  sudo chown -R circleci.circleci "${HOME}/.kube" "${HOME}/.minikube"
 fi
 
 # Wait for Kubernetes to be up and ready.
