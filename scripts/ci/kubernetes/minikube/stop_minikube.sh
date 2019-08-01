@@ -27,7 +27,7 @@ fi
 # Fix file permissions
 # TODO: Change this - this should be Travis independent
 if [[ "${TRAVIS}" == true ]]; then
-  sudo chown -R travis.travis "${HOME}/.kube" "${HOME}/.minikube" 2>/dev/null || true
+  sudo chown -R ${USER} "${HOME}/.kube" "${HOME}/.minikube" 2>/dev/null || true
 fi
 set +e
 
@@ -40,4 +40,4 @@ if sudo minikube status; then
 fi
 set -e
 
-sudo chown -R travis.travis . || true
+sudo chown -R ${USER} . || true
