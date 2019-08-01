@@ -1,0 +1,175 @@
+version: 2.1
+
+executors:
+  default-executor:    
+    machine:
+      image: ubuntu-1604:201903-01
+      
+commands:
+  default-build-steps:
+    parameters:
+      python-version:
+        type: string
+        default: "3.6.5"
+      install-script:
+        type: steps
+        default:
+          - run: ./hooks/build
+      script:
+        type: steps
+        default:
+          - run: ./scripts/ci/ci_run_airflow_testing.sh
+    steps:
+      - checkout
+      - run:
+          name: Set Environment Variables
+          command: |
+            pyenv global << parameters.python-version >>
+            echo 'export BUILD_ID='"$CIRCLE_WORKFLOW_ID" >> $BASH_ENV
+            echo 'CI="true"' >> $BASH_ENV
+      - run:
+          name: Before Install
+          command: ./scripts/ci/ci_before_install.sh
+      - steps: << parameters.install-script >>
+      - steps: << parameters.script >>
+
+test_requires: &test_requires  
+  requires:
+    - flake8
+    - mypy
+    - check_license_header
+    - lint_dockerfile
+    - pylint
+
+jobs:  
+  tests_postgres_python_3_6:
+    executor: default-executor
+    environment:
+      BACKEND: postgres
+      ENV: docker
+      TRAVIS_JOB_NAME: "Tests postgres python 3.6"
+    steps:
+      - default-build-steps
+      
+  tests_sqlite_python_3_5:
+    executor: default-executor
+    environment:
+      BACKEND: sqlite
+      ENV: docker
+      TRAVIS_JOB_NAME: "Tests sqlite python 3.5"      
+    steps:
+      - default-build-steps:
+          python-version: "3.5.2"
+      
+  tests_mysql_python_3_6:
+    executor: default-executor
+    environment:
+      BACKEND: mysql
+      ENV: docker
+      TRAVIS_JOB_NAME: "Tests mysql python 3.6"
+    steps:
+      - default-build-steps
+      
+  tests_postgres_kubernetes_python_3_6_persistent:
+    executor: default-executor
+    environment:
+      BACKEND: postgres
+      ENV: kubernetes
+      KUBERNETES_VERSION: v1.13.0
+      KUBERNETES_MODE: persistent_mode
+      TRAVIS_JOB_NAME: "Tests kubernetes python 3.6 persistent"
+    steps:
+      - default-build-steps
+      
+  tests_postgres_kubernetes_python_3_6_git:
+    executor: default-executor
+    environment:
+      BACKEND: postgres
+      ENV: kubernetes
+      KUBERNETES_VERSION: v1.13.0
+      KUBERNETES_MODE: git_mode
+      TRAVIS_JOB_NAME: "Tests kubernetes python 3.6 git"
+    steps:
+      - default-build-steps
+      
+  flake8:
+    executor: default-executor
+    environment:
+      TRAVIS_JOB_NAME: "Flake8"
+    steps:
+      - default-build-steps:
+          install-script: []
+          script:
+            - run: ./scripts/ci/ci_flake8.sh
+      
+  mypy:
+    executor: default-executor
+    environment:
+      TRAVIS_JOB_NAME: "mypy"
+    steps:
+      - default-build-steps:
+          install-script: []
+          script:
+            - run: ./scripts/ci/ci_mypy.sh
+      
+  check_license_header:
+    executor: default-executor
+    environment:
+      TRAVIS_JOB_NAME: "Check license header"
+    steps:
+      - default-build-steps:
+          install-script: []
+          script:
+            - run: ./scripts/ci/ci_check_license.sh
+      
+  lint_dockerfile:
+    executor: default-executor
+    environment:
+      TRAVIS_JOB_NAME: "Lint Dockerfile"
+    steps:
+      - default-build-steps:
+          install-script: []
+          script:
+            - run: ./scripts/ci/ci_lint_dockerfile.sh
+              
+  check_docs:
+    executor: default-executor
+    environment:
+      TRAVIS_JOB_NAME: "Check docs"
+    steps:
+      - default-build-steps:
+          install-script: []
+          script:
+            - run: ./scripts/ci/ci_docs.sh
+          
+  pylint:
+    executor: default-executor
+    environment:
+      TRAVIS_JOB_NAME: "Pylint"
+    steps:
+      - default-build-steps:
+          install-script: []
+          script:
+            - run: ./scripts/ci/ci_pylint.sh
+              
+workflows:
+  version: 2
+  build:
+    jobs:
+      - flake8
+      - mypy
+      - check_license_header
+      - lint_dockerfile
+      - pylint
+      - tests_postgres_python_3_6:
+          <<: *test_requires
+      - tests_sqlite_python_3_5:
+          <<: *test_requires
+      - tests_mysql_python_3_6:
+          <<: *test_requires
+      - tests_postgres_kubernetes_python_3_6_persistent:
+          <<: *test_requires    
+      - tests_postgres_kubernetes_python_3_6_git:
+          <<: *test_requires              
+      - check_docs:
+          <<: *test_requires
