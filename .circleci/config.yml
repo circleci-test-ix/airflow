@@ -50,7 +50,7 @@ jobs:
       TRAVIS_JOB_NAME: "Tests postgres python 3.6"
     steps:
       - default-build-steps
-      
+
   tests_sqlite_python_3_5:
     executor: default-executor
     environment:
