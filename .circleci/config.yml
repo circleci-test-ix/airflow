@@ -27,6 +27,7 @@ commands:
             pyenv global << parameters.python-version >>
             echo 'export BUILD_ID='"$CIRCLE_WORKFLOW_ID" >> $BASH_ENV
             echo 'CI="true"' >> $BASH_ENV
+            echo 'TRAVIS="$CIRCLECI"' >> $BASH_ENV
       - run:
           name: Before Install
           command: ./scripts/ci/ci_before_install.sh
