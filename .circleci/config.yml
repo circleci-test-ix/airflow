@@ -4,7 +4,6 @@ executors:
   default-executor:    
     machine:
       image: ubuntu-1604:201903-01
-#       image: circleci/classic:201808-01
     working_directory: ~/build/apache/airflow
       
 commands:
@@ -23,11 +22,7 @@ commands:
       - run:
           name: Set Environment Variables
           command: |
-            # Install python 3.6.7
-            cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
-            pyenv install 3.6.7
-            pyenv global ${CIRCLECI_PYTHON_VERSION:-3.6.7}
-            pip install --upgrade pip
+            pyenv global ${CIRCLECI_PYTHON_VERSION:-3.6.5}
             python --version
             pip --version
             echo 'export BUILD_ID='"$CIRCLE_WORKFLOW_ID" >> $BASH_ENV
@@ -45,7 +40,7 @@ test_requires: &test_requires
     - mypy
     - check_license_header
     - lint_dockerfile
-#     - pylint
+    - pylint
 
 jobs:  
   tests_postgres_python_3_6:
