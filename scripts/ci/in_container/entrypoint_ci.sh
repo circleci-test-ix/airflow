@@ -99,9 +99,9 @@ export HADOOP_DISTRO
 
 # Fix codecov build path
 # TODO: Check this - this should be made travis-independent
-if [[ ! -h /home/travis/build/apache/airflow ]]; then
-  sudo mkdir -p /home/travis/build/apache
-  sudo ln -s "${AIRFLOW_ROOT}" /home/travis/build/apache/airflow
+if [[ ! -h /home/circleci/build/apache/airflow ]]; then
+  sudo mkdir -p /home/circleci/build/apache
+  sudo ln -s "${AIRFLOW_ROOT}" /home/circleci/build/apache/airflow
 fi
 
 # Fix file permissions
@@ -211,10 +211,10 @@ else
     # This script runs inside a container, the path of the kubernetes certificate
     # is /home/travis/.minikube/client.crt but the user in the container is `root`
     # TODO: Check this. This should be made travis-independent :D
-    if [[ ! -d /home/travis ]]; then
-        sudo mkdir -p /home/travis
+    if [[ ! -d /home/circleci ]]; then
+        sudo mkdir -p /home/circleci
     fi
-    sudo ln -s /root/.minikube /home/travis/.minikube
+    sudo ln -s /root/.minikube /home/circleci/.minikube
     echo
     echo "Running CI tests with ${ARGS[*]}"
     echo
