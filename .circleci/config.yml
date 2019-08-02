@@ -3,8 +3,8 @@ version: 2.1
 executors:
   default-executor:    
     machine:
-#       image: ubuntu-1604:201903-01
-      image: circleci/classic:201808-01
+      image: ubuntu-1604:201903-01
+#       image: circleci/classic:201808-01
     working_directory: ~/apache/airflow
       
 commands:
@@ -31,8 +31,8 @@ commands:
             python --version
             pip --version
             echo 'export BUILD_ID='"$CIRCLE_WORKFLOW_ID" >> $BASH_ENV
-            echo 'CI="true"' >> $BASH_ENV
-            echo 'TRAVIS='"$CIRCLECI" >> $BASH_ENV
+            echo 'export CI="true"' >> $BASH_ENV
+            echo 'export TRAVIS='"$CIRCLECI" >> $BASH_ENV
       - run:
           name: Before Install
           command: ./scripts/ci/ci_before_install.sh
