@@ -36,7 +36,7 @@ commands:
             echo 'export TRAVIS_JOB_NUMBER='"$CIRCLE_BUILD_NUM" >> $BASH_ENV
             echo 'export TRAVIS_PULL_REQUEST='"$CIRCLE_PULL_REQUEST" >> $BASH_ENV
             echo 'export TRAVIS_COMMIT='"$CIRCLE_SHA1" >> $BASH_ENV
-            echo 'export TRAVIS_REPO_SLUG='"$CIRCLE_PROJECT_REPONAME/$CIRCLE_PROJECT_USERNAME" >> $BASH_ENV
+            echo 'export TRAVIS_REPO_SLUG='"$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" >> $BASH_ENV
       - run:
           name: Before Install
           command: ./scripts/ci/ci_before_install.sh
