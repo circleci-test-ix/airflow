@@ -5,7 +5,7 @@ executors:
     machine:
       image: ubuntu-1604:201903-01
 #       image: circleci/classic:201808-01
-    working_directory: ~/apache/airflow
+    working_directory: ~/build/apache/airflow
       
 commands:
   default-build-steps:
