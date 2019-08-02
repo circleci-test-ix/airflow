@@ -39,11 +39,6 @@ if [[ ${#@} == "0" ]]; then
     echo
     echo "Running pylint for all sources except 'tests' folder"
     echo
-    
-    echo 
-    echo "package versions"
-    pip freeze
-    echo
 
     # Using path -prune is much better in the local environment on OSX because we have host
     # Files mounted and node_modules is a huge directory which takes many seconds to even scan
